@@ -288,7 +288,7 @@ public class ZeroDerisavi {
 	 * the states have probabilistic bisimilarity distance zero:
 	 * zero[s * chain.getNumberOfStates() + t] == states s and t have distance zero
 	 */
-	public static boolean[] decide(DTMCSimple<Double> dtmc, List<BitSet> propBSs) {
+	public static void decide(DTMCSimple<Double> dtmc, List<BitSet> propBSs) {
 		initialisePartitionInfo(dtmc, propBSs);
 		int numberOfStates = dtmc.getNumStates();
 		int numberOfLabels = initialpartition.length;
@@ -383,6 +383,40 @@ public class ZeroDerisavi {
 			}
 		}
 		
+	
+	}
+	
+	
+	
+	public static DTMCSimple<Double> minimiseDTMC(DTMCSimple<Double> dtmc, List<BitSet> propBSs){
+		//private static LinkedList<Block> partition;
+		decide(dtmc, propBSs);
+		int NewnumberOfStates = partition.size();
+		DTMCSimple<Double> newDtmcSimple = new DTMCSimple<Double>(NewnumberOfStates);
+		
+		int id = 0;
+		for (Block block : partition) {
+			block.id = id++;
+		}
+		for (Block block : partition) {
+			for (Block block2 : partition) {
+				for (State s : block.elements) {
+					for (State t : block2.elements) {
+						//System.out.println(s.block.id + " " + t.block.id +  " " + dtmc.getProbability(s.id, t.id));
+						newDtmcSimple.addToProbability(s.block.id, t.block.id, dtmc.getProbability(s.id, t.id));
+					}
+				}
+				
+			}
+		}
+	
+		return newDtmcSimple;
+	}
+	
+	public static boolean[] bisimilar(DTMCSimple<Double> dtmc, List<BitSet> propBSs){
+		
+		decide(dtmc, propBSs);
+		int numberOfStates = dtmc.getNumStates();
 		boolean[] bisimilar = new boolean[numberOfStates * numberOfStates];
 		for (Block block : partition) {
 			for (State s : block.elements) {
@@ -394,6 +428,7 @@ public class ZeroDerisavi {
 		}
 		return bisimilar;
 	}
+	
 	
 	
 	private static void initialisePartitionInfo(ModelSimple<Double> model, List<BitSet> propBSs)
