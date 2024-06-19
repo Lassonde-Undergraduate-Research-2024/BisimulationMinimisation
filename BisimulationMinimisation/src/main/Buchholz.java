@@ -36,11 +36,6 @@ public class Buchholz extends PrismComponent{
 	 * A class to represent the equivalence classes during the split method.
 	 */
 
-
-	public Buchholz() {
-		// TODO Auto-generated constructor stub
-	}
-
 	protected static int[] partition;
 	
 	
@@ -69,7 +64,7 @@ public class Buchholz extends PrismComponent{
 	 * the states are probabilistic bisimilar:
 	 * bisimilar[s * chain.getNumberOfStates() + t] == states s and t are probabilistic bisimilar
 	 */
-	public static boolean[] decide(DTMCSimple<Double> dtmc, List<BitSet> propBSs) {
+	public static List<Set<Integer>> decide(DTMCSimple<Double> dtmc, List<BitSet> propBSs) {
 	
 		initialisePartitionInfo(dtmc, propBSs); //-> this will give partition[]
 		
@@ -149,16 +144,42 @@ public class Buchholz extends PrismComponent{
 			}
 		}
 		
-		/*
+		return classes;
+		
+	}
+	
+	
+	public static DTMCSimple<Double> minimiseDTMC(DTMCSimple<Double> dtmc, List<BitSet> propBSs){
+		
+		List<Set<Integer>> classes = decide(dtmc, propBSs);
+		int NumberOfStates = dtmc.getNumStates();
+		int NewNumberOfStates = classes.size();
+		DTMCSimple<Double> newDtmcSimple = new DTMCSimple<Double>(NewNumberOfStates);
+		int[] clazzOf = new int[NumberOfStates];		
+		
+		int id = 0;
 		for (Set<Integer> clazz : classes) {
-			System.out.println("Class : ");
-			for (Integer t : clazz) {
-				
-				System.out.print(t + " ");
+			for (Integer s : clazz) {
+				clazzOf[s] = id;
 			}
-			System.out.println('\n');
+			id++;
 		}
-		*/
+		
+		for(int source = 0; source < NumberOfStates; source++) {
+			for(int target = 0; target < NumberOfStates; target++) {
+				newDtmcSimple.addToProbability(clazzOf[source], clazzOf[target], dtmc.getProbability(source, target));
+			}
+			
+		}
+	
+		return newDtmcSimple;
+	}
+	
+	public static boolean[] bisimilar(DTMCSimple<Double> dtmc, List<BitSet> propBSs){
+		
+		List<Set<Integer>> classes = decide(dtmc, propBSs);
+		
+		int NumberOfStates = dtmc.getNumStates();
 		boolean[] bisimilar = new boolean[NumberOfStates * NumberOfStates];
 		for (Set<Integer> clazz : classes) {
 			for (Integer s : clazz) {
@@ -167,6 +188,9 @@ public class Buchholz extends PrismComponent{
 				}
 			}
 		}
+		
+		
+		
 		return bisimilar;
 	}
 	
