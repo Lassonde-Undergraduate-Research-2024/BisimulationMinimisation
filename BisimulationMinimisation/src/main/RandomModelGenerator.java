@@ -12,8 +12,8 @@ import prism.PrismException;
 
 public class RandomModelGenerator {
 
-	public static final int MAXnumberOfStates = (int) 1000;
-	public static final int MAXnumberOfLabels = 5;
+	public static final int MAXnumberOfStates = (int) 5;
+	public static final int MAXnumberOfLabels = 1;
 	public static void main(String[] args) {
 			
 		Random random = new Random();
@@ -50,7 +50,7 @@ public class RandomModelGenerator {
 				}
 			} else {
 				dtmcSimple.setProbability(source, source, 1.0);
-				//System.out.println(source + " " + source + " " + 1);
+			//	System.out.println(source + " " + source + " " + 1);
 			}
 		}
 		
@@ -75,9 +75,9 @@ public class RandomModelGenerator {
 		}
 		
 		
-		boolean[] res = Buchholz.decide(dtmcSimple, propBSs);	
+		boolean[] res = Buchholz.bisimilar(dtmcSimple, propBSs);	
 		
-		/*
+		//*
 		System.out.println("Buchholz:");
 		for(int i = 0; i < numberOfStates; i++) {
 			for(int j = 0; j < numberOfStates; j++) {
@@ -89,11 +89,12 @@ public class RandomModelGenerator {
 				
 			}
 			System.out.println('\n');
-		}//*/
+		}
+		//*/
 		
 		
 		boolean[] ZeroDerisaviRes = ZeroDerisavi.decide(dtmcSimple, propBSs);	
-		/*
+		//*
 		System.out.println("ZeroDerisavi:");
 		for(int i = 0; i < numberOfStates; i++) {
 			for(int j = 0; j < numberOfStates; j++) {
@@ -109,6 +110,7 @@ public class RandomModelGenerator {
 		//*/
 		
 		
+		
 		///// compare the result
 		for(int i = 0; i < numberOfStates; i++) {
 			for(int j = 0; j < numberOfStates; j++) {
@@ -120,7 +122,13 @@ public class RandomModelGenerator {
 			}
 		}
 		
-		System.out.print("okay");
+		System.out.println("okay");
+		
+		
+		
+		DTMCSimple<Double> newDtmcSimple = Buchholz.minimiseDTMC(dtmcSimple, propBSs);
+		System.out.print(newDtmcSimple.toString());
+		
 	}
 
 }
