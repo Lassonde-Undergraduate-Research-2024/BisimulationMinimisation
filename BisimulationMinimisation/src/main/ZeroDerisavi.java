@@ -391,15 +391,21 @@ public class ZeroDerisavi {
 	public static DTMCSimple<Double> minimiseDTMC(DTMCSimple<Double> dtmc, List<BitSet> propBSs){
 		//private static LinkedList<Block> partition;
 		decide(dtmc, propBSs);
-		int NewnumberOfStates = partition.size();
-		DTMCSimple<Double> newDtmcSimple = new DTMCSimple<Double>(NewnumberOfStates);
+	
 		
 		int id = 0;
 		for (Block block : partition) {
-			block.id = id++;
+			if(block.elements.size() > 0)
+				block.id = id++;
 		}
+		DTMCSimple<Double> newDtmcSimple = new DTMCSimple<Double>(id);
+		
 		for (Block block : partition) {
+			if(block.elements.size() == 0)
+				continue;
 			for (Block block2 : partition) {
+				if(block.elements.size() == 0)
+					continue;
 				for (State s : block.elements) {
 					for (State t : block2.elements) {
 						//System.out.println(s.block.id + " " + t.block.id +  " " + dtmc.getProbability(s.id, t.id));
@@ -419,6 +425,7 @@ public class ZeroDerisavi {
 		int numberOfStates = dtmc.getNumStates();
 		boolean[] bisimilar = new boolean[numberOfStates * numberOfStates];
 		for (Block block : partition) {
+			//System.out.println(block.elements.size());
 			for (State s : block.elements) {
 				for (State t : block.elements) {
 					assert t.id < numberOfStates;

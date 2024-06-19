@@ -12,8 +12,8 @@ import prism.PrismException;
 
 public class RandomModelGenerator {
 
-	public static final int MAXnumberOfStates = (int) 10;
-	public static final int MAXnumberOfLabels = 2;
+	public static final int MAXnumberOfStates = (int) 5;
+	public static final int MAXnumberOfLabels = 1;
 	public static void main(String[] args) {
 			
 		Random random = new Random();
