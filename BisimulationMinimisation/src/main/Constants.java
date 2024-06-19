@@ -1,54 +1,35 @@
+/*
+ * Copyright (C)  2018  Qiyi Tang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package main;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Map;
-
-import explicit.DTMCSimple;
-import explicit.StateModelChecker;
-import prism.PrismException;
-
-public class console {
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		System.out.println(args[0]);
-		System.out.println(args[1]);
-		DTMCSimple<Double> dtmcSimple;
-		Map<String, BitSet> labels;
-		
-		//*
-		try {
-			dtmcSimple = new DTMCSimple<Double>();
-			dtmcSimple.buildFromPrismExplicit(args[0]);
-			dtmcSimple.addInitialState(0);
-			labels = StateModelChecker.loadLabelsFile(args[1]);
-			//List<String> propNames = new ArrayList<>(labels.keySet());
-			List<BitSet> propBSs = new ArrayList<>(labels.values());
-			boolean[] res = Buchholz.bisimilar(dtmcSimple, propBSs);
-			
-			for(int i = 0; i < dtmcSimple.getNumStates(); i++) {
-				for(int j = 0; j < dtmcSimple.getNumStates(); j++) {
-					if(res[i*dtmcSimple.getNumStates() + j]) {
-						System.out.print(1 + " ");						
-					}else {
-						System.out.print(0 + " ");
-					}
-					
-				}
-				System.out.println('\n');
-			}
-			
-			
-			//boolean[] res = bz.decide(dtmcSimple, propNames, propBSs);
-			
-		} catch (PrismException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//*/
-		
-	}
-
+/**
+ * Constants.
+ *
+ * @author Qiyi Tang
+ */
+public class Constants {
+      
+      /**
+       * Desired accuracy.
+       */
+      public static final double ACCURACY = 1E-8;
+      
+      /**
+       * Number of digits of reals printed.
+       */
+      public static final int PRECISION = 3;
 }
