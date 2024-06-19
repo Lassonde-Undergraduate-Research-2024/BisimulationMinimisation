@@ -26,7 +26,7 @@ public class console {
 			labels = StateModelChecker.loadLabelsFile(args[1]);
 			//List<String> propNames = new ArrayList<>(labels.keySet());
 			List<BitSet> propBSs = new ArrayList<>(labels.values());
-			boolean[] res = Buchholz.decide(dtmcSimple, propBSs);
+			boolean[] res = Buchholz.bisimilar(dtmcSimple, propBSs);
 			
 			for(int i = 0; i < dtmcSimple.getNumStates(); i++) {
 				for(int j = 0; j < dtmcSimple.getNumStates(); j++) {
