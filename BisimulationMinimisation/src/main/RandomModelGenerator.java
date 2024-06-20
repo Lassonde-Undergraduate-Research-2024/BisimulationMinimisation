@@ -12,10 +12,10 @@ import prism.PrismException;
 
 public class RandomModelGenerator {
 
-	public static final int MAXnumberOfStates = (int) 5;
-	public static final int MAXnumberOfLabels = 1;
-	public static void main(String[] args) {
-			
+	public static final int MAXnumberOfStates = (int) 10000;
+	public static final int MAXnumberOfLabels = 3;
+	
+	private static void RandomModel() {
 		Random random = new Random();
 		int numberOfStates = random.nextInt(MAXnumberOfStates) + 1;
 		int numberOfLabels = random.nextInt(MAXnumberOfLabels) + 1;
@@ -74,10 +74,11 @@ public class RandomModelGenerator {
 			//System.out.print('\n');
 		}
 		
+
 		
 		boolean[] res = Buchholz.bisimilar(dtmcSimple, propBSs);	
 		
-		//*
+		/*
 		System.out.println("Buchholz:");
 		for(int i = 0; i < numberOfStates; i++) {
 			for(int j = 0; j < numberOfStates; j++) {
@@ -94,7 +95,7 @@ public class RandomModelGenerator {
 		
 		
 		boolean[] ZeroDerisaviRes = ZeroDerisavi.bisimilar(dtmcSimple, propBSs);	
-		//*
+		/*
 		System.out.println("ZeroDerisavi:");
 		for(int i = 0; i < numberOfStates; i++) {
 			for(int j = 0; j < numberOfStates; j++) {
@@ -116,6 +117,10 @@ public class RandomModelGenerator {
 			for(int j = 0; j < numberOfStates; j++) {
 				if(ZeroDerisaviRes[i*numberOfStates + j] != res[i*numberOfStates + j]) {
 					System.out.print("Erorr!!");
+					
+					
+					System.out.println(dtmcSimple.toString());
+					
 					System.exit(0);
 				}
 				
@@ -126,11 +131,18 @@ public class RandomModelGenerator {
 		
 		
 		
-		DTMCSimple<Double> newDtmcSimple = Buchholz.minimiseDTMC(dtmcSimple, propBSs);
-		System.out.println(newDtmcSimple.toString());
+		//DTMCSimple<Double> newDtmcSimple = Buchholz.minimiseDTMC(dtmcSimple, propBSs);
+		//System.out.println(newDtmcSimple.toString());
 		
-		DTMCSimple<Double> newDtmcSimple2 = ZeroDerisavi.minimiseDTMC(dtmcSimple, propBSs);
-		System.out.println(newDtmcSimple2.toString());
+		//DTMCSimple<Double> newDtmcSimple2 = ZeroDerisavi.minimiseDTMC(dtmcSimple, propBSs);
+		//System.out.println(newDtmcSimple2.toString());
+	}
+	
+	
+	public static void main(String[] args) {
+			
+		for(int i = 0; i < 1000000; i++)
+			RandomModel();
 	}
 
 }

@@ -392,7 +392,6 @@ public class ZeroDerisavi {
 		//private static LinkedList<Block> partition;
 		decide(dtmc, propBSs);
 	
-		
 		int id = 0;
 		for (Block block : partition) {
 			if(block.elements.size() > 0)
@@ -409,7 +408,7 @@ public class ZeroDerisavi {
 				for (State s : block.elements) {
 					for (State t : block2.elements) {
 						//System.out.println(s.block.id + " " + t.block.id +  " " + dtmc.getProbability(s.id, t.id));
-						newDtmcSimple.addToProbability(s.block.id, t.block.id, dtmc.getProbability(s.id, t.id));
+						newDtmcSimple.addToProbability(block.id, block2.id, dtmc.getProbability(s.id, t.id));
 					}
 				}
 				
