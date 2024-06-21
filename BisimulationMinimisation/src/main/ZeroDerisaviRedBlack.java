@@ -42,7 +42,7 @@ import explicit.ModelSimple;
  * 
  * @author Zainab Fatmi
  */
-public class ZeroDerisavi {
+public class ZeroDerisaviRedBlack {
 	
 	protected static int[] initialpartition;
 	/**
