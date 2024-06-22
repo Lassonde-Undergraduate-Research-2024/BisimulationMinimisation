@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import explicit.Bisimulation;
 import explicit.DTMCSimple;
 import explicit.StateModelChecker;
 import prism.PrismException;
@@ -13,7 +14,7 @@ import prism.PrismException;
 public class RandomModelGenerator {
 
 	public static final int MAXnumberOfStates = (int) 1000;
-	public static final int MAXnumberOfLabels = 3;
+	public static final int MAXnumberOfLabels = 1;
 	
 	private static void RandomModel() {
 		Random random = new Random();
@@ -76,7 +77,7 @@ public class RandomModelGenerator {
 		
 
 		
-		boolean[] res = Buchholz.bisimilar(dtmcSimple, propBSs);	
+		boolean[] BuchholzRes = Buchholz.bisimilar(dtmcSimple, propBSs);	
 		
 		/*
 		System.out.println("Buchholz:");
@@ -95,7 +96,10 @@ public class RandomModelGenerator {
 		
 		
 		boolean[] ZeroDerisaviRes = ZeroDerisavi.bisimilar(dtmcSimple, propBSs);	
-		boolean[] ZeroDerisaviResRedBlack = ZeroDerisaviRedBlack.bisimilar(dtmcSimple, propBSs);
+		boolean[] ZeroDerisavisRedBlackRes = ZeroDerisaviRedBlack.bisimilar(dtmcSimple, propBSs);
+		PrismBisimulation<Double> Pr = new PrismBisimulation<Double>();
+		boolean[] PrismBisimulation = Pr.getResult(dtmcSimple, propBSs);
+		
 		/*
 		System.out.println("ZeroDerisavi:");
 		for(int i = 0; i < numberOfStates; i++) {
@@ -116,11 +120,14 @@ public class RandomModelGenerator {
 		///// compare the result
 		for(int i = 0; i < numberOfStates; i++) {
 			for(int j = 0; j < numberOfStates; j++) {
-				if(ZeroDerisaviRes[i*numberOfStates + j] != res[i*numberOfStates + j] ||
-				   ZeroDerisaviRes[i*numberOfStates + j] != ZeroDerisaviResRedBlack[i*numberOfStates + j]) {
+				if(ZeroDerisaviRes[i*numberOfStates + j] != BuchholzRes[i*numberOfStates + j] ||
+				   ZeroDerisaviRes[i*numberOfStates + j] != ZeroDerisavisRedBlackRes[i*numberOfStates + j] ||
+				   PrismBisimulation[i*numberOfStates + j] != BuchholzRes[i*numberOfStates + j]) {
 					
 					
-					System.out.println("Erorr!! " + i + " " + j + " " + ZeroDerisaviResRedBlack[i*numberOfStates + j] + " "+ res[i*numberOfStates + j]);
+					
+					System.out.print("Erorr!! " + i + " " + j + " " + ZeroDerisavisRedBlackRes[i*numberOfStates + j] + " " + BuchholzRes[i*numberOfStates + j]);
+					System.out.println(" " + PrismBisimulation[i*numberOfStates + j] + ' ' + ZeroDerisaviRes[i*numberOfStates + j]);
 					System.out.println(dtmcSimple.toString());
 					
 					System.exit(0);
