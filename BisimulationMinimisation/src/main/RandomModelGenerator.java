@@ -12,7 +12,7 @@ import prism.PrismException;
 
 public class RandomModelGenerator {
 
-	public static final int MAXnumberOfStates = (int) 10000;
+	public static final int MAXnumberOfStates = (int) 1000;
 	public static final int MAXnumberOfLabels = 3;
 	
 	private static void RandomModel() {
@@ -95,6 +95,7 @@ public class RandomModelGenerator {
 		
 		
 		boolean[] ZeroDerisaviRes = ZeroDerisavi.bisimilar(dtmcSimple, propBSs);	
+		boolean[] ZeroDerisaviResRedBlack = ZeroDerisaviRedBlack.bisimilar(dtmcSimple, propBSs);
 		/*
 		System.out.println("ZeroDerisavi:");
 		for(int i = 0; i < numberOfStates; i++) {
@@ -115,10 +116,11 @@ public class RandomModelGenerator {
 		///// compare the result
 		for(int i = 0; i < numberOfStates; i++) {
 			for(int j = 0; j < numberOfStates; j++) {
-				if(ZeroDerisaviRes[i*numberOfStates + j] != res[i*numberOfStates + j]) {
-					System.out.print("Erorr!!");
+				if(ZeroDerisaviRes[i*numberOfStates + j] != res[i*numberOfStates + j] ||
+				   ZeroDerisaviRes[i*numberOfStates + j] != ZeroDerisaviResRedBlack[i*numberOfStates + j]) {
 					
 					
+					System.out.println("Erorr!! " + i + " " + j + " " + ZeroDerisaviResRedBlack[i*numberOfStates + j] + " "+ res[i*numberOfStates + j]);
 					System.out.println(dtmcSimple.toString());
 					
 					System.exit(0);

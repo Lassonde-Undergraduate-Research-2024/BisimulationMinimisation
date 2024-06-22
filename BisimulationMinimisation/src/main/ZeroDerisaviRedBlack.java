@@ -106,35 +106,38 @@ public class ZeroDerisaviRedBlack {
 		 * @param state a state
 		 */
 		public void insert(double probability, State state) {
-			Node newNode = new Node(probability, null);
-	        newNode.block.elements.add(state);
-	        state.block = newNode.block;
+		Node currentNode = root;
+		    Node parent = null;
+		    while (currentNode != null) {
+		        parent = currentNode;
+		        // Compare probabilities considering the ACCURACY
+		        if (Math.abs(probability - currentNode.probability) < ACCURACY) {
+		            // Probability is similar, add state to its block
+		            currentNode.block.elements.add(state);
+		            state.block = currentNode.block;
+		            return;
+		        } else if (probability < currentNode.probability) {
+		            currentNode = currentNode.left;
+		        } else {
+		            currentNode = currentNode.right;
+		        }
+		    }
 
-	        if (root == null) {
-	            root = newNode;
-	        } else {
-	            Node current = root;
-	            Node parent;
-	            while (true) {
-	                parent = current;
-	                if (probability < current.probability) {
-	                    current = current.left;
-	                    if (current == null) {
-	                        parent.left = newNode;
-	                        newNode.parent = parent;
-	                        break;
-	                    }
-	                } else {
-	                    current = current.right;
-	                    if (current == null) {
-	                        parent.right = newNode;
-	                        newNode.parent = parent;
-	                        break;
-	                    }
-	                }
-	            }
-	        }
-	        fixInsert(newNode);
+		    // If no similar probability node found, create a new node and insert it
+		    Node newNode = new Node(probability, parent);
+		    newNode.block.elements.add(state);
+		    state.block = newNode.block;
+
+		    // Insert the new node into the tree
+		    if (parent == null) {
+		        root = newNode;
+		    } else if (probability < parent.probability) {
+		        parent.left = newNode;
+		    } else {
+		        parent.right = newNode;
+		    }
+
+		    fixInsert(newNode);
 		}
 
 		/**
