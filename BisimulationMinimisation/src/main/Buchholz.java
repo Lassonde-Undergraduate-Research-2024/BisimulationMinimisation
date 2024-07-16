@@ -15,7 +15,9 @@ import java.util.TreeSet;
 
 import explicit.CTMCModelChecker;
 import explicit.CTMCSimple;
+import explicit.DTMC;
 import explicit.DTMCSimple;
+import explicit.Model;
 import explicit.ModelCheckerResult;
 import explicit.ModelSimple;
 import explicit.StateModelChecker;
@@ -67,7 +69,6 @@ public class Buchholz extends PrismComponent{
 	public static List<Set<Integer>> decide(DTMCSimple<Double> dtmc, List<BitSet> propBSs) {
 	
 		initialisePartitionInfo(dtmc, propBSs); //-> this will give partition[]
-		
 		
 		int NumberOfStates = dtmc.getNumStates();
 		List<Integer> indices = new ArrayList<Integer>();
@@ -149,7 +150,7 @@ public class Buchholz extends PrismComponent{
 	}
 	
 	
-	public static DTMCSimple<Double> minimiseDTMC(DTMCSimple<Double> dtmc, List<BitSet> propBSs){
+	public static DTMC<Double> minimiseDTMC(DTMCSimple<Double> dtmc, List<BitSet> propBSs){
 		
 		List<Set<Integer>> classes = decide(dtmc, propBSs);
 		int NumberOfStates = dtmc.getNumStates();
@@ -196,10 +197,11 @@ public class Buchholz extends PrismComponent{
 	
 	
 	
-	private static void initialisePartitionInfo(ModelSimple<Double> model, List<BitSet> propBSs)
+	private static void initialisePartitionInfo(Model<Double> model, List<BitSet> propBSs)
 	{
 		BitSet bs1, bs0;
 		int numStates = model.getNumStates();
+		partition = new int[numStates];
 
 		// Compute all non-empty combinations of propositions
 		List<BitSet> all = new ArrayList<BitSet>();
@@ -226,16 +228,21 @@ public class Buchholz extends PrismComponent{
 			}
 		}
 
-		partition = new int[numStates+4];
 		// Construct initial partition
+		all.removeIf(BitSet::isEmpty);
 		int numBlocks = all.size();
 		for (int j = 0; j < numBlocks; j++) {
 			BitSet bs = all.get(j);
 			for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
-				//System.out.println(i);
 				partition[i] = j;
 			}
 		}
+		
+		
+//		System.out.println("partition:");
+//		for(int i = 0; i < numStates; i++)
+//			System.out.print(partition[i] + " ");
+//		System.out.println(" ");
 	}
 	
 	

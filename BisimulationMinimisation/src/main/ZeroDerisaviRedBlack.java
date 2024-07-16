@@ -499,7 +499,8 @@ public class ZeroDerisaviRedBlack {
 			}
 		}
 
-		initialpartition = new int[numStates+4];
+		initialpartition = new int[numStates];
+		all.removeIf(BitSet::isEmpty);
 		// Construct initial partition
 		int numBlocks = all.size();
 		for (int j = 0; j < numBlocks; j++) {

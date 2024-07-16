@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import explicit.DTMCSimple;
+import explicit.Model;
 import explicit.ModelSimple;
 
 /**
@@ -436,7 +437,6 @@ public class ZeroDerisavi {
 	}
 	
 	
-	
 	private static void initialisePartitionInfo(ModelSimple<Double> model, List<BitSet> propBSs)
 	{
 		BitSet bs1, bs0;
@@ -466,8 +466,9 @@ public class ZeroDerisavi {
 				}
 			}
 		}
-
-		initialpartition = new int[numStates+4];
+		
+		initialpartition = new int[numStates];
+		all.removeIf(BitSet::isEmpty);
 		// Construct initial partition
 		int numBlocks = all.size();
 		for (int j = 0; j < numBlocks; j++) {

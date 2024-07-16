@@ -47,14 +47,14 @@ import prism.PrismNotSupportedException;
 /**
  * Class to perform bisimulation minimisation for explicit-state models.
  */
-public class PrismBisimulation<Value> extends PrismComponent
+public class PrismBisimulation extends PrismComponent
 {
 	// Local storage of partition info
-	protected int numStates;
-	protected int[] partition;
-	protected int numBlocks;
-	protected MDPSimple<Value> mdp;
-	protected boolean result[];
+	protected static int numStates;
+	protected static int[] partition;
+	protected static int numBlocks;
+	protected static MDPSimple<Double> mdp;
+	protected static boolean result[];
 
 	
 	
@@ -69,31 +69,33 @@ public class PrismBisimulation<Value> extends PrismComponent
 	 * @param propNames Names of the propositions in {@code propBSs}
 	 * @param propBSs Propositions (satisfying sets of states) to be preserved by bisimulation.
 	 */
-	public DTMCSimple<Value> minimiseDTMC(DTMCSimple<Value> dtmc, List<BitSet> propBSs)
+	public DTMCSimple<Double> minimiseDTMC(DTMCSimple<Double> dtmc, List<BitSet> propBSs)
 	{
 		// Create initial partition based on propositions
+		// Create initial partition based on propositions
 		initialisePartitionInfo(dtmc, propBSs);
-
+		//printPartition(dtmc);
+		
 		// Iterative splitting
 		boolean changed = true;
 		while (changed)
 			changed = splitDTMC(dtmc);
-		//mainLog.println("Minimisation: " + numStates + " to " + numBlocks + " States");
-	
+		mainLog.println("Minimisation: " + numStates + " to " + numBlocks + " States");
+		//printPartition(dtmc);
 		
-		DTMCSimple<Value> dtmcNew = new DTMCSimple<>(numBlocks);
+		// Build reduced model
+		DTMCSimple<Double> dtmcNew = new DTMCSimple<>(numBlocks);
 		for (int i = 0; i < numBlocks; i++) {
-			for (Map.Entry<Integer, Value> e : mdp.getChoice(i, 0)) {
-				dtmcNew.setProbability((Integer) mdp.getAction(i, 0), e.getKey(), e.getValue());
+			for (Map.Entry<Integer, Double> e : mdp.getChoice(i, 0)) {
+				dtmcNew.setProbability(i, e.getKey(), e.getValue());
 			}
 		}
-		attachStatesAndLabels(dtmc, dtmcNew, null, propBSs);
-
+		
 		return dtmcNew;
 	}
 	
 	
-	public boolean[] getResult(DTMCSimple<Value> dtmc, List<BitSet> propBSs) {
+	public static boolean[] getResult(DTMCSimple<Double> dtmc, List<BitSet> propBSs) {
 		
 		initialisePartitionInfo(dtmc, propBSs);
 
@@ -101,7 +103,7 @@ public class PrismBisimulation<Value> extends PrismComponent
 		while (changed)
 			changed = splitDTMC(dtmc);
 		
-		result = new boolean[numStates * numStates];
+		boolean[] result = new boolean[numStates * numStates];
 		for (int s = 0; s < numStates; s++) {
 			for (int t = 0; t < numStates; t++) {
 				result[s*numStates + t] = (partition[s] == partition[t]);
@@ -116,7 +118,7 @@ public class PrismBisimulation<Value> extends PrismComponent
 	 * Construct the initial partition based on a set of proposition bitsets.
 	 * Store info in {@code numStates}, {@code numBlocks} and {@code partition}.
 	 */
-	private void initialisePartitionInfo(ModelSimple<Value> model, List<BitSet> propBSs)
+	private static void initialisePartitionInfo(Model<Double> model, List<BitSet> propBSs)
 	{
 		BitSet bs1, bs0;
 		numStates = model.getNumStates();
@@ -148,6 +150,7 @@ public class PrismBisimulation<Value> extends PrismComponent
 		}
 
 		// Construct initial partition
+		all.removeIf(BitSet::isEmpty);
 		numBlocks = all.size();
 		for (int j = 0; j < numBlocks; j++) {
 			BitSet bs = all.get(j);
@@ -155,16 +158,22 @@ public class PrismBisimulation<Value> extends PrismComponent
 				partition[i] = j;
 			}
 		}
+		
+		
+//		System.out.println("partition:");
+//		for(int i = 0; i < numStates; i++)
+//			System.out.print(partition[i] + " ");
+//		System.out.println(" ");
 	}
 
 	/**
 	 * Perform a split of the current partition, if possible, updating {@code numBlocks} and {@code partition}.
 	 * @return whether or not the partition was split 
 	 */
-	private boolean splitDTMC(DTMC<Value> dtmc)
+	private static boolean splitDTMC(DTMC<Double> dtmc)
 	{
 		int s, a, i, numBlocksNew, numChoicesOld;
-		Distribution<Value> distrNew;
+		Distribution<Double> distrNew;
 		int partitionNew[];
 
 		partitionNew = new int[numStates];
@@ -175,10 +184,10 @@ public class PrismBisimulation<Value> extends PrismComponent
 		mdp = new MDPSimple<>(numBlocks);
 		for (s = 0; s < numStates; s++) {
 			// Build lifted distribution
-			Iterator<Map.Entry<Integer, Value>> iter = dtmc.getTransitionsIterator(s);
+			Iterator<Map.Entry<Integer, Double>> iter = dtmc.getTransitionsIterator(s);
 			distrNew = new Distribution<>(dtmc.getEvaluator());
 			while (iter.hasNext()) {
-				Map.Entry<Integer, Value> e = iter.next();
+				Map.Entry<Integer, Double> e = iter.next();
 				distrNew.add(partition[e.getKey()], e.getValue());
 			}
 			// Store in MDP, update new partition
@@ -196,8 +205,10 @@ public class PrismBisimulation<Value> extends PrismComponent
 		//try { mdp.exportToDotFile("mdp.dot"); } catch (PrismException e) {}
 		// Update info
 		boolean changed = numBlocks != numBlocksNew;
+		
 		partition = partitionNew;
 		numBlocks = numBlocksNew;
+		
 
 		return changed;
 	}
@@ -214,7 +225,7 @@ public class PrismBisimulation<Value> extends PrismComponent
 	 * @param propNames The names of the propositions
 	 * @param propBSs Satisfying states (of the minimised model) for the propositions
 	 */
-	private void attachStatesAndLabels(Model<Value> model, ModelExplicit<Value> modelNew, List<String> propNames, List<BitSet> propBSs)
+	private void attachStatesAndLabels(Model<Double> model, ModelExplicit<Double> modelNew, List<String> propNames, List<BitSet> propBSs)
 	{
 		// Attach states
 		if (model.getStatesList() != null) {
