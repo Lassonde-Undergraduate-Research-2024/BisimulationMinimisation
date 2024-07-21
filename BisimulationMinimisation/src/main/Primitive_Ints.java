@@ -8,6 +8,7 @@ import static main.Constants.ACCURACY;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -147,8 +148,6 @@ public class Primitive_Ints {
 				int l = 0; // number of new blocks
 				if (this.borderline.get(b) == this.end.get(b)) {
 					this.borderline.set(b, this.start.get(b));
-					//debug();
-					
 					b1 = b; // b was empty so transfer identity
 				} else {
 					// create b1
@@ -168,13 +167,12 @@ public class Primitive_Ints {
 					this.split(b1);
 					l++;
 					ArraysSort sorter = new ArraysSort(w);
-					sorter.sort(this.elems, (int) this.start.get(b2), (int) this.end.get(b2));
-					this.location[this.elems[(int) this.start.get(b2)]] = (int) this.start.get(b2);
-					for (int i = (int) this.start.get(b2) + 1; i < (int) this.end.get(b2); i++) {
+					sorter.sort(this.elems, this.start.get(b2), this.end.get(b2));
+					this.location[this.elems[this.start.get(b2)]] = this.start.get(b2);
+					for (int i = this.start.get(b2) + 1; i < this.end.get(b2); i++) {
 						this.location[this.elems[i]] = i; // update locations
 						if (!isEqual(w[this.elems[i]], w[this.elems[i - 1]])) {
 							this.borderline.set(this.block[this.elems[i]], i);
-							//debug();
 							this.split(this.block[this.elems[i]]);
 							l++;
 						}
@@ -194,6 +192,9 @@ public class Primitive_Ints {
 					UB.remove(max);
 				}
 			}
+			
+			Collections.copy(borderline, start); 
+			
 			// clear all
 			BT.clear();
 			for (int j = 0; j < ST.size(); j++) {
@@ -236,6 +237,7 @@ public class Primitive_Ints {
 		this.location[t] = this.location[s];
 		this.location[s] = border;
 		this.borderline.set(b, border + 1);
+			
 	}
 
 	/**
@@ -250,7 +252,6 @@ public class Primitive_Ints {
 		// create the new block
 		this.start.add(this.start.get(b));
 		this.borderline.add(this.start.get(b));
-		//System.out.println("add " + this.start.get(b));
 		this.end.add(this.borderline.get(b));
 		this.start.set(b, this.borderline.get(b));
 	}
