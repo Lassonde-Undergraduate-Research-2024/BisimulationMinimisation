@@ -13,8 +13,8 @@ import prism.PrismException;
 
 public class RandomModelGenerator {
 
-	public static final int MAXnumberOfStates = (int) 1000;
-	public static final int MAXnumberOfLabels = 2;
+	public static final int MAXnumberOfStates = (int) 10;
+	public static final int MAXnumberOfLabels = 3;
 
 	public static DTMCSimple<Double> GenerateModel(int numberOfStates){
 
@@ -45,7 +45,7 @@ public class RandomModelGenerator {
 				}
 			} else {
 				dtmcSimple.setProbability(source, source, 1.0);
-				//	System.out.println(source + " " + source + " " + 1);
+					//System.out.println(source + " " + source + " " + 1);
 			}
 		}
 		return dtmcSimple;
@@ -72,18 +72,18 @@ public class RandomModelGenerator {
 			//propBSs.add(bitSet);
 		}
 
-		System.out.println("Labels");
-		for(int i = 0; i < numberOfLabels; i++) {
-			System.out.print(i + ": ");
-			for(int j = 0; j < numberOfStates; j++) {
-				//System.out.print(i+ " "+ j +" ::");
-				if(propBSs.get(i).get(j))
-					System.out.print(1);
-				else
-					System.out.print(0);
-			}
-			System.out.println(" ");
-		}
+//		System.out.println("Labels");
+//		for(int i = 0; i < numberOfLabels; i++) {
+//			System.out.print(i + ": ");
+//			for(int j = 0; j < numberOfStates; j++) {
+//				//System.out.print(i+ " "+ j +" ::");
+//				if(propBSs.get(i).get(j))
+//					System.out.print(1);
+//				else
+//					System.out.print(0);
+//			}
+//			System.out.println(" ");
+//		}
 
 		return propBSs;
 	}
@@ -92,12 +92,12 @@ public class RandomModelGenerator {
 
 
 	private static void RandomModel() {
-		System.out.println("--------------------------------------------");
+		//System.out.println("--------------------------------------------");
 
 		Random random = new Random();
 		int numberOfStates = random.nextInt(MAXnumberOfStates) + 1;
 		int numberOfLabels = random.nextInt(MAXnumberOfLabels) + 1;
-		System.out.println(numberOfStates + " " + numberOfLabels);
+		//System.out.println(numberOfStates + " " + numberOfLabels);
 		DTMCSimple<Double> dtmcSimple = GenerateModel(numberOfStates);
 		List<BitSet> propBSs = Generatelabels(numberOfStates, numberOfLabels);
 
@@ -105,9 +105,10 @@ public class RandomModelGenerator {
 		Primitive_Ints Ints = new Primitive_Ints();
 		boolean[] Primitive = Ints.bisimilar(dtmcSimple, propBSs);
 		boolean[] BuchholzRes = Buchholz.bisimilar(dtmcSimple, propBSs);	
-		boolean[] ZeroDerisaviRes = ZeroDerisavi.bisimilar(dtmcSimple, propBSs);	
-		boolean[] ZeroDerisavisRedBlackRes = ZeroDerisaviRedBlack.bisimilar(dtmcSimple, propBSs);
-		boolean[] PrismBisim = PrismBisimulation.getResult(dtmcSimple, propBSs);
+		boolean[][] newAlg = NewAlgorithem.Bisimulation.bisimilar(dtmcSimple, propBSs);
+		//boolean[] ZeroDerisaviRes = ZeroDerisavi.bisimilar(dtmcSimple, propBSs);	
+	//	boolean[] ZeroDerisavisRedBlackRes = ZeroDerisaviRedBlack.bisimilar(dtmcSimple, propBSs);
+		//boolean[] PrismBisim = PrismBisimulation.getResult(dtmcSimple, propBSs);
 
 		/*
 		System.out.println("Primitive");
@@ -159,14 +160,8 @@ public class RandomModelGenerator {
 		for(int i = 0; i < numberOfStates; i++) {
 			for(int j = 0; j < numberOfStates; j++) {
 				int x = i*numberOfStates+j;
-				if(BuchholzRes[x] != BuchholzRes[x] || 
-					BuchholzRes[x] != ZeroDerisavisRedBlackRes[x]||
-					BuchholzRes[x] != ZeroDerisaviRes[x] ||
-					BuchholzRes[x] != Primitive[x]) {
+				if(BuchholzRes[x] != newAlg[i][j]) {
 
-
-					System.out.println("Erorr!! " + i + " " + j + " " + PrismBisim[i*numberOfStates + j] + " " + BuchholzRes[i*numberOfStates + j]);
-					//System.out.println(" " + PrismBisimulation[i*numberOfStates + j] + ' ' + ZeroDerisaviRes[i*numberOfStates + j]);
 					System.out.println(dtmcSimple.toString());
 
 					System.exit(0);
@@ -174,22 +169,18 @@ public class RandomModelGenerator {
 
 			}
 		}
-
+		
 		System.out.println("okay");
 
-
-
-		//DTMCSimple<Double> newDtmcSimple = Buchholz.minimiseDTMC(dtmcSimple, propBSs);
-		//System.out.println(newDtmcSimple.toString());
-
-		//DTMCSimple<Double> newDtmcSimple2 = ZeroDerisavi.minimiseDTMC(dtmcSimple, propBSs);
-		//System.out.println(newDtmcSimple2.toString());
+		System.out.println(Buchholz.minimiseDTMC(dtmcSimple, propBSs).toString());
+		System.out.println(NewAlgorithem.Bisimulation.minimiseDTMC(dtmcSimple, propBSs).toString());
+		
 	}
 
 
 	public static void main(String[] args) {
 
-		for(int i = 0; i < 10000; i++)
+		for(int i = 0; i < 5; i++)
 		{
 			RandomModel();
 			//System.out.println(i);

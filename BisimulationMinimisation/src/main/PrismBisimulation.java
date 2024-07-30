@@ -56,11 +56,6 @@ public class PrismBisimulation extends PrismComponent
 	protected static MDPSimple<Double> mdp;
 	protected static boolean result[];
 
-	
-	
-	public PrismBisimulation() {
-		// TODO Auto-generated constructor stub
-	}
 
 
 	/**
@@ -214,42 +209,4 @@ public class PrismBisimulation extends PrismComponent
 	}
 
 
-
-	/**
-	 * Attach a list of states to the minimised model by adding a representative state
-	 * from the original model.
-	 * Also attach information about the propositions (used for bisimulation minimisation)
-	 * to the minimised model, in the form of labels (stored as BitSets).
-	 * @param model The original model
-	 * @param modelNew The minimised model
-	 * @param propNames The names of the propositions
-	 * @param propBSs Satisfying states (of the minimised model) for the propositions
-	 */
-	private void attachStatesAndLabels(Model<Double> model, ModelExplicit<Double> modelNew, List<String> propNames, List<BitSet> propBSs)
-	{
-		// Attach states
-		if (model.getStatesList() != null) {
-			List<State> statesList = model.getStatesList();
-			List<State> statesListNew = new ArrayList<State>(numBlocks);
-			for (int i = 0; i < numBlocks; i++) {
-				statesListNew.add(null);
-			}
-			for (int i = 0; i < numStates; i++) {
-				if (statesListNew.get(partition[i]) == null)
-					statesListNew.set(partition[i], statesList.get(i));
-			}
-			modelNew.setStatesList(statesListNew);
-		}
-
-		// Build/attach new labels
-		int numProps = propBSs.size();
-		for (int i = 0; i < numProps; i++) {
-			String propName = propNames.get(i);
-			BitSet propBS = propBSs.get(i);
-			BitSet propBSnew = new BitSet();
-			for (int j = propBS.nextSetBit(0); j >= 0; j = propBS.nextSetBit(j + 1))
-				propBSnew.set(partition[j]);
-			modelNew.addLabel(propName, propBSnew);
-		}
-	}
 }
