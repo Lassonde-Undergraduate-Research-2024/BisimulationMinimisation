@@ -114,7 +114,7 @@ public class Bisimulation {
 			}
 		}
 
-		while (first <= last) {
+while (first <= last) {
 			
 			Arrays.fill(hasBeenChecked, false);
 			toCheck.clearisFirst();
@@ -134,12 +134,9 @@ public class Bisimulation {
 					}
 				}
 			}
-			//System.out.println("The signitureList:");
-			//System.out.println(toCheck.toString());
+			
 			toCheck.quicksort(0, toCheck.size()-1, 0);
-			//System.out.println("The signitureList atfer threeWayQuickSort:");
-			//System.out.println(toCheck.toString());
-			//System.out.println("//////////////////////////////");
+			
 			// split the blocks
 			first = last + 1;
 
@@ -148,7 +145,7 @@ public class Bisimulation {
 			while (numberChecked < numberToCheck) {
 				int maxSize = 0;
 				int maxBlock = 0;
-				
+				int sumOfSizes = 0;
 				int oldBlock = toCheck.get(numberChecked).getOldBlock();
 				while (numberChecked < numberToCheck && toCheck.get(numberChecked).getOldBlock() == oldBlock) { // out of bounds
 					ArrayList<Integer> newBlock = new ArrayList<Integer>();
@@ -158,23 +155,27 @@ public class Bisimulation {
 						numberChecked++;
 					} while (numberChecked < numberToCheck && !toCheck.isFirst(numberChecked));
 
-					if (newBlock.size() != partition.getStates(oldBlock).size()) { // FvB: nothing needs to be done when newBlock is the same as permutation[oldBlock]
+					if (newBlock.size() != partition.getStates(oldBlock).size()) { 
 						// create new block
-						partition.refine(oldBlock, newBlock);
+						partition.createNewBlock(newBlock);
+						//partition.refine(oldBlock, newBlock);
 						last++;
 						int size = newBlock.size();
+						sumOfSizes += size;
 						if (size > maxSize) { // keep track of largest sub-block of split block
 							maxBlock = last;
 							maxSize = size;
 						}
 					}
 				}
-
+				partition.refine(oldBlock);
 				if (maxSize > partition.getStates(oldBlock).size()) {
+					
 					partition.swap(maxBlock, oldBlock);
 				}
 			}
 		}
+		
 
 		return;
 	}

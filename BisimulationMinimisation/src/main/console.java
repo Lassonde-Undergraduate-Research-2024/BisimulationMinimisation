@@ -15,7 +15,7 @@ public class console {
 
 	public static void main(String[] args) {
 		
-		int numberOfStates = 50000;
+		int numberOfStates = 30000;
 		int numberOfLabels = 3;
 		System.out.println(numberOfStates + " " + numberOfLabels);
 		DTMCSimple<Double> dtmcSimple = RandomModelGenerator.GenerateModel(numberOfStates);
@@ -28,19 +28,19 @@ public class console {
         long endTime = System.currentTimeMillis();
         System.out.println("Time taken for NewAlgorithem: " + (endTime - startTime) + " milliseconds");
 		
-		// Measure time for Buchholz.minimiseDTMC
-        startTime = System.currentTimeMillis();
-        Buchholz.minimiseDTMC(dtmcSimple, propBSs);
-        endTime = System.currentTimeMillis();
-        System.out.println("Time taken for Buchholz: " + (endTime - startTime) + " milliseconds");
-
-        
         
      // Measure time for PrismBisimulation
         startTime = System.currentTimeMillis();
         PrismBisimulation.minimiseDTMC(dtmcSimple, propBSs);
         endTime = System.currentTimeMillis();
         System.out.println("Time taken for PrismBisimulation: " + (endTime - startTime) + " milliseconds");
+        
+        
+        // Measure time for Buchholz.minimiseDTMC
+        startTime = System.currentTimeMillis();
+        Buchholz.minimiseDTMC(dtmcSimple, propBSs);
+        endTime = System.currentTimeMillis();
+        System.out.println("Time taken for Buchholz: " + (endTime - startTime) + " milliseconds");
         
         
      // Measure time for ZeroDerisavi

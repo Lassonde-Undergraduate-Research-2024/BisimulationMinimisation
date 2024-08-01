@@ -2,6 +2,7 @@ package NewAlgorithem;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -9,6 +10,7 @@ import java.util.List;
  * 
  * @author Eric Ruppert
  * @author Franck van Breugel
+ * @author Hiva Karami
  */
 public class Partition extends ArrayList<ArrayList<Integer>> {
 	
@@ -91,6 +93,34 @@ public class Partition extends ArrayList<ArrayList<Integer>> {
 		return this.indexToBlock.get(this.index[state]);
 	}
 	
+	
+	
+	
+	public void createNewBlock(ArrayList<Integer> newBlock) {
+		int last = this.size();
+		this.add(newBlock);
+		this.blockToIndex.add(last);
+		this.indexToBlock.add(last);
+		for (Integer state : newBlock) {
+			this.index[state] = last; 
+		}
+	}
+	
+	
+	public void refine(int block) {
+		
+		int id = blockToIndex.get(block);
+		 Iterator<Integer> iterator = this.getStates(block).iterator();
+        while (iterator.hasNext()) {
+            if (index[iterator.next()] != id) {
+                iterator.remove();
+            }
+        }
+		
+		
+	}
+	
+	
 	/**
 	 * Removes all states of the given new block from the block with the given ID
 	 * and add all those states as a new block to this partition.
@@ -109,6 +139,7 @@ public class Partition extends ArrayList<ArrayList<Integer>> {
 		for (Integer state : newBlock) {
 			this.index[state] = last; 
 		}
+		
 	}
 	
 	/**
