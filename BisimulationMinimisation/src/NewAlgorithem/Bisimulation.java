@@ -24,7 +24,7 @@ import explicit.ModelSimple;
  */
 public class Bisimulation {
 
-	
+
 	protected static Partition partition;
 	protected static int numberOfStates;
 	protected static int numberOfLabels;
@@ -36,7 +36,7 @@ public class Bisimulation {
 	 * the states are probabilistic bisimilar
 	 */
 	public static void decide(DTMCSimple<Double> dtmc, List<BitSet> propBSs) {
-		
+
 		numberOfStates = dtmc.getNumStates(); 
 		numberOfLabels = propBSs.size();
 
@@ -44,7 +44,7 @@ public class Bisimulation {
 		 * initial partition: states are in the same block iff they have the same labelling
 		 */
 		final List<BitSet> initial = new ArrayList<BitSet>();
-		
+
 		final BitSet one = (BitSet) propBSs.get(0).clone();
 		final BitSet notOne = (BitSet) one.clone();
 		notOne.flip(0, numberOfStates);
@@ -75,7 +75,7 @@ public class Bisimulation {
 
 		// partition
 		partition = new Partition(numberOfStates, initial);
-		
+
 		// first potential splitter
 		int first = 0; 
 
@@ -106,7 +106,7 @@ public class Bisimulation {
 			predecessors[target] = new ArrayList<Edge>();
 		}		
 		for (int source = 0; source < numberOfStates; source++) {
-			
+
 			Iterator<Map.Entry<Integer, Double>> iter = dtmc.getTransitionsIterator(source);
 			while (iter.hasNext()) {
 				Map.Entry<Integer, Double> e = iter.next();
@@ -114,8 +114,8 @@ public class Bisimulation {
 			}
 		}
 
-while (first <= last) {
-			
+		while (first <= last) {
+
 			Arrays.fill(hasBeenChecked, false);
 			toCheck.clearisFirst();
 			toCheck.clear();
@@ -134,9 +134,9 @@ while (first <= last) {
 					}
 				}
 			}
-			
+
 			toCheck.quicksort(0, toCheck.size()-1, 0);
-			
+
 			// split the blocks
 			first = last + 1;
 
@@ -170,20 +170,20 @@ while (first <= last) {
 				}
 				partition.refine(oldBlock);
 				if (maxSize > partition.getStates(oldBlock).size()) {
-					
+
 					partition.swap(maxBlock, oldBlock);
 				}
 			}
 		}
-		
+
 
 		return;
 	}
-	
-	
-	
+
+
+
 	public static boolean[][] bisimilar(DTMCSimple<Double> dtmc, List<BitSet> propBSs){
-		
+
 		//initialisePartitionInfo(dtmc, propBSs); 
 		decide(dtmc, propBSs);
 		final boolean[][] bisimilar = new boolean[numberOfStates][numberOfStates];
@@ -194,19 +194,19 @@ while (first <= last) {
 				}
 			}
 		}
-		
+
 		return bisimilar;
 	}
-	
+
 	public static DTMCSimple<Double> minimiseDTMC(DTMCSimple<Double> dtmc, List<BitSet> propBSs){
-		
+
 		decide(dtmc, propBSs);
-		
-		
+
+
 		int numBlocks = partition.size();
 		DTMCSimple<Double> dtmcNew = new DTMCSimple<Double>(numBlocks);
 
-		
+
 		int[] blockOf = new int[numberOfStates];	
 		int cnt = 0;
 		for (List<Integer> block : partition) {
@@ -215,18 +215,18 @@ while (first <= last) {
 			}
 			cnt++;
 		}
-		
+
 		for (int source = 0; source < numberOfStates; source++) {
 			Iterator<Map.Entry<Integer, Double>> iter = dtmc.getTransitionsIterator(source);
 			while (iter.hasNext()) {
 				Map.Entry<Integer, Double> e = iter.next();
 				dtmcNew.addToProbability(blockOf[source], blockOf[e.getKey()], e.getValue());
-				
+
 			}
 		}
-		
+
 		return dtmcNew;
 	}
-	
-	
+
+
 }

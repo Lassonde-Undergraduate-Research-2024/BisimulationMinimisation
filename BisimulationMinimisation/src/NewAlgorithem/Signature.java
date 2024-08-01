@@ -138,8 +138,9 @@ public class Signature implements Comparable<Signature> {
 	 * @pre. probability &gt; 0
 	 */
 	public void add(int block, double probability) {
-		if (this.blocks.get(this.blocks.size() - 1) == block) {
-			this.probabilities.set(this.probabilities.size() - 1, this.probabilities.get(this.probabilities.size() - 1) + probability);
+		int size = this.blocks.size() - 1;
+		if (this.blocks.get(size) == block) {
+			this.probabilities.set(size, this.probabilities.get(size) + probability);
 		} else {
 			this.blocks.add(block);
 			this.probabilities.add(probability);

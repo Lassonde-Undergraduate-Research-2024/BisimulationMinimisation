@@ -95,7 +95,11 @@ public class Partition extends ArrayList<ArrayList<Integer>> {
 	
 	
 	
-	
+	/**
+	 * add all states of newBlock as a new block to this partition.
+	 * @param newBlock states of the block
+	 * 
+	 */
 	public void createNewBlock(ArrayList<Integer> newBlock) {
 		int last = this.size();
 		this.add(newBlock);
@@ -107,6 +111,10 @@ public class Partition extends ArrayList<ArrayList<Integer>> {
 	}
 	
 	
+	/**
+	 * Removes all states of the given block whose ID doesn't match the index of the block.
+	 * @param block ID of a block
+	 */
 	public void refine(int block) {
 		
 		int id = blockToIndex.get(block);
