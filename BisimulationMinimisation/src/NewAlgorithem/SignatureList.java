@@ -4,12 +4,12 @@ import java.util.Collections;
 import java.util.Random;
 
 
-
 /**
  * A list of signatures.
  * 
  * @author Eric Ruppert
  * @author Franck van Breugel
+ * @author Hiva Karami
  */
 public class SignatureList extends ArrayList<Signature> {
 
@@ -175,8 +175,8 @@ public class SignatureList extends ArrayList<Signature> {
 
 	 /**
 	  * sort based on oldblock and size
-	  * @param low
-	  * @param high
+	  * @param low the index at which the sublist starts (inclusive)
+	  * @param high the index at which the sublist ends (inclusive)
 	  * @param d is 0 or 1. 
 	  */
 	 void quicksort(int low, int high, int d) {
@@ -234,8 +234,11 @@ public class SignatureList extends ArrayList<Signature> {
 		
 		 
 	 }
+	
 	 
-
+	 /**
+	 * Clears the isFirst ArrayList.
+	 */
 	public void clearisFirst() {
 		this.isFirst.clear();
 	}

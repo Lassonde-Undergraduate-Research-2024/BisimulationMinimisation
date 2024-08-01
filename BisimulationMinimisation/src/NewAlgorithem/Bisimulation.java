@@ -20,6 +20,7 @@ import explicit.ModelSimple;
  * 
  * @author Eric Ruppert
  * @author Franck van Breugel
+ * @author Hiva Karami
  */
 public class Bisimulation {
 

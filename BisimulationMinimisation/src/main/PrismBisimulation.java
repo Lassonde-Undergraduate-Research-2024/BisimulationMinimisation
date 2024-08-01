@@ -64,7 +64,7 @@ public class PrismBisimulation extends PrismComponent
 	 * @param propNames Names of the propositions in {@code propBSs}
 	 * @param propBSs Propositions (satisfying sets of states) to be preserved by bisimulation.
 	 */
-	public DTMCSimple<Double> minimiseDTMC(DTMCSimple<Double> dtmc, List<BitSet> propBSs)
+	public static DTMCSimple<Double> minimiseDTMC(DTMCSimple<Double> dtmc, List<BitSet> propBSs)
 	{
 		// Create initial partition based on propositions
 		// Create initial partition based on propositions
@@ -75,7 +75,7 @@ public class PrismBisimulation extends PrismComponent
 		boolean changed = true;
 		while (changed)
 			changed = splitDTMC(dtmc);
-		mainLog.println("Minimisation: " + numStates + " to " + numBlocks + " States");
+		//mainLog.println("Minimisation: " + numStates + " to " + numBlocks + " States");
 		//printPartition(dtmc);
 		
 		// Build reduced model

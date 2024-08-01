@@ -220,7 +220,26 @@ public class Primitive_Ints {
 		return bisimilar;
 	}
 	
-	
+	protected DTMCSimple<Double> minimiseDTMC(DTMCSimple<Double> dtmc, List<BitSet> propBSs)
+	{
+
+		   
+		initialisePartitionInfo(dtmc, propBSs); 
+		int[] bl = evaluate((DTMCSimple<Double>) dtmc, propBSs);	
+		numBlocks = this.start.size();
+		DTMCSimple<Double> dtmcNew = new DTMCSimple<>(numBlocks);
+		
+		for (int i = 0; i < numStates; i++) {
+			int s = bl[i];
+			Iterator<Map.Entry<Integer, Double>> iter = dtmc.getTransitionsIterator(i);
+			while (iter.hasNext()) {
+				Map.Entry<Integer, Double> e = iter.next();
+				dtmcNew.addToProbability(s, bl[e.getKey()], e.getValue());
+			}
+		}
+		return dtmcNew;
+	}
+		
 	
 
 	/**

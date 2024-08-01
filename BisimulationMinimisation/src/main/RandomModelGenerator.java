@@ -13,7 +13,7 @@ import prism.PrismException;
 
 public class RandomModelGenerator {
 
-	public static final int MAXnumberOfStates = (int) 10;
+	public static final int MAXnumberOfStates = (int) 1000;
 	public static final int MAXnumberOfLabels = 3;
 
 	public static DTMCSimple<Double> GenerateModel(int numberOfStates){
@@ -102,13 +102,13 @@ public class RandomModelGenerator {
 		List<BitSet> propBSs = Generatelabels(numberOfStates, numberOfLabels);
 
 
-		Primitive_Ints Ints = new Primitive_Ints();
-		boolean[] Primitive = Ints.bisimilar(dtmcSimple, propBSs);
+		//Primitive_Ints Ints = new Primitive_Ints();
+		//boolean[] Primitive = Ints.bisimilar(dtmcSimple, propBSs);
 		boolean[] BuchholzRes = Buchholz.bisimilar(dtmcSimple, propBSs);	
 		boolean[][] newAlg = NewAlgorithem.Bisimulation.bisimilar(dtmcSimple, propBSs);
 		//boolean[] ZeroDerisaviRes = ZeroDerisavi.bisimilar(dtmcSimple, propBSs);	
 	//	boolean[] ZeroDerisavisRedBlackRes = ZeroDerisaviRedBlack.bisimilar(dtmcSimple, propBSs);
-		//boolean[] PrismBisim = PrismBisimulation.getResult(dtmcSimple, propBSs);
+		boolean[] PrismBisim = PrismBisimulation.getResult(dtmcSimple, propBSs);
 
 		/*
 		System.out.println("Primitive");
@@ -175,12 +175,13 @@ public class RandomModelGenerator {
 		System.out.println(Buchholz.minimiseDTMC(dtmcSimple, propBSs).toString());
 		System.out.println(NewAlgorithem.Bisimulation.minimiseDTMC(dtmcSimple, propBSs).toString());
 		
+		
 	}
 
 
 	public static void main(String[] args) {
 
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < 1; i++)
 		{
 			RandomModel();
 			//System.out.println(i);
