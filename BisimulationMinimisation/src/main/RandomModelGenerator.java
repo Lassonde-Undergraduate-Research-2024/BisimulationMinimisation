@@ -104,7 +104,7 @@ public class RandomModelGenerator {
 
 		//Primitive_Ints Ints = new Primitive_Ints();
 		//boolean[] Primitive = Ints.bisimilar(dtmcSimple, propBSs);
-		boolean[] BuchholzRes = Buchholz.bisimilar(dtmcSimple, propBSs);	
+		//boolean[] BuchholzRes = Buchholz.bisimilar(dtmcSimple, propBSs);	
 		boolean[][] newAlg = NewAlgorithem.Bisimulation.bisimilar(dtmcSimple, propBSs);
 		//boolean[] ZeroDerisaviRes = ZeroDerisavi.bisimilar(dtmcSimple, propBSs);	
 	//	boolean[] ZeroDerisavisRedBlackRes = ZeroDerisaviRedBlack.bisimilar(dtmcSimple, propBSs);
@@ -160,7 +160,7 @@ public class RandomModelGenerator {
 		for(int i = 0; i < numberOfStates; i++) {
 			for(int j = 0; j < numberOfStates; j++) {
 				int x = i*numberOfStates+j;
-				if(BuchholzRes[x] != newAlg[i][j]) {
+				if(PrismBisim[x] != newAlg[i][j]) {
 
 					System.out.println(dtmcSimple.toString());
 
@@ -172,7 +172,7 @@ public class RandomModelGenerator {
 		
 		System.out.println("okay");
 
-		System.out.println(Buchholz.minimiseDTMC(dtmcSimple, propBSs).toString());
+		System.out.println(PrismBisimulation.minimiseDTMC(dtmcSimple, propBSs).toString());
 		System.out.println(NewAlgorithem.Bisimulation.minimiseDTMC(dtmcSimple, propBSs).toString());
 		
 		

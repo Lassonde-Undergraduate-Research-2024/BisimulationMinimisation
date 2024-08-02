@@ -22,12 +22,12 @@ public class console {
         System.out.println("Time taken for NewAlgorithem: " + (endTime - startTime) + " milliseconds");
 		
         
-//     // Measure time for PrismBisimulation
-//        startTime = System.currentTimeMillis();
-//        PrismBisimulation.minimiseDTMC(dtmcSimple, propBSs);
-//        endTime = System.currentTimeMillis();
-//        System.out.println("Time taken for PrismBisimulation: " + (endTime - startTime) + " milliseconds");
-//        
+     // Measure time for PrismBisimulation
+        startTime = System.currentTimeMillis();
+        PrismBisimulation.minimiseDTMC(dtmcSimple, propBSs);
+        endTime = System.currentTimeMillis();
+        System.out.println("Time taken for PrismBisimulation: " + (endTime - startTime) + " milliseconds");
+        
         
 //        // Measure time for Buchholz.minimiseDTMC
 //        startTime = System.currentTimeMillis();

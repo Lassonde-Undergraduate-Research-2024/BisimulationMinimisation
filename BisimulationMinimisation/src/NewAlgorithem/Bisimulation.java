@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import explicit.DTMCSimple;
@@ -203,21 +204,22 @@ public class Bisimulation {
 		decide(dtmc, propBSs);
 
 
-		int numBlocks = partition.size();
-		DTMCSimple<Double> dtmcNew = new DTMCSimple<Double>(numBlocks);
-
-
+		int numBlocks = 0;
 		int[] blockOf = new int[numberOfStates];	
-		int cnt = 0;
 		for (List<Integer> block : partition) {
+			if(block.isEmpty())
+				continue;
 			for (Integer s : block) {
-				blockOf[s] = cnt;
+				blockOf[s] = numBlocks;
 			}
-			cnt++;
+			numBlocks++;
 		}
 
+		DTMCSimple<Double> dtmcNew = new DTMCSimple<Double>(numBlocks);
+
 		for (int source = 0; source < numberOfStates; source++) {
-			Iterator<Map.Entry<Integer, Double>> iter = dtmc.getTransitionsIterator(source);
+			Iterator<Entry<Integer, Double>> iter = dtmc.getTransitionsIterator(source);
+			
 			while (iter.hasNext()) {
 				Map.Entry<Integer, Double> e = iter.next();
 				dtmcNew.addToProbability(blockOf[source], blockOf[e.getKey()], e.getValue());
